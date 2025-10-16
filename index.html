@@ -185,10 +185,11 @@
         }
         
         #map {
-            height: 500px;
+            height: 600px;
             border-radius: 15px;
             margin: 20px 0;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            border: 3px solid #3498db;
         }
         
         .timeline {
@@ -542,12 +543,19 @@
             <div class="info-card">
                 <p><strong>המפה מציגה את כל נקודות העניין בטיול:</strong></p>
                 <ul>
-                    <li>🟢 נקודת התחלה: Cleveland Dam</li>
-                    <li>🔵 נקודות עצירה במסלול</li>
-                    <li>🔴 יעד ראשי: Capilano Salmon Hatchery</li>
-                    <li>🟠 מסעדות ב-Edgemont Village</li>
+                    <li>🟢 <strong>סמן ירוק:</strong> נקודת התחלה - Cleveland Dam + חנייה</li>
+                    <li>🔵 <strong>סמנים כחולים:</strong> נקודות עצירה במסלול (תצפיות, שבילים, גשרים)</li>
+                    <li>🔴 <strong>סמן אדום:</strong> יעד ראשי - Capilano Salmon Hatchery</li>
+                    <li>🟠 <strong>סמנים כתומים:</strong> מסעדות ב-Edgemont Village</li>
+                    <li>━ ━ <strong>קו מקווקו אדום:</strong> המסלול המומלץ שלנו!</li>
                 </ul>
-                <p style="margin-top: 10px;"><strong>💡 טיפ:</strong> לחצו על הסמנים למידע נוסף!</p>
+                <p style="margin-top: 15px;"><strong>💡 טיפים למפה:</strong></p>
+                <ul>
+                    <li>לחצו על הסמנים לפרטים נוספים!</li>
+                    <li>זום פנימה/החוצה עם גלגלת העכבר או מחוות אצבעות</li>
+                    <li>גררו את המפה כדי לראות אזורים שונים</li>
+                    <li>המפה מבוססת על OpenStreetMap - מדויקת ומעודכנת</li>
+                </ul>
             </div>
             
             <div id="map"></div>
@@ -1017,17 +1025,27 @@
                 </ul>
             </div>
 
-            <iframe class="pdf-embed" 
-                    src="https://metrovancouver.org/services/regional-parks/Documents/capilano-river-regional-park-map.pdf">
-            </iframe>
+            <div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+                <iframe class="pdf-embed" 
+                        src="https://metrovancouver.org/services/regional-parks/Documents/capilano-river-regional-park-map.pdf#zoom=100">
+                </iframe>
+            </div>
 
-            <div class="info-card">
-                <p><strong>אם ה-PDF לא נטען:</strong></p>
-                <ol>
-                    <li>לחצו על הקישור למעלה להורדת המפה</li>
-                    <li>שמרו אותה בטלפון או הדפיסו</li>
-                    <li>קחו אותה איתכם ליום הטיול!</li>
-                </ol>
+            <div class="info-card" style="margin-top: 20px;">
+                <p><strong>💡 טיפים למפה:</strong></p>
+                <ul>
+                    <li>המפה טעונה ישירות מ-Metro Vancouver - רשמית ומעודכנת</li>
+                    <li>אפשר לגלול ולזום בתוך המפה</li>
+                    <li>במובייל: לחצו על המפה ופתחו במסך מלא</li>
+                    <li>רוצים להוריד? <a href="https://metrovancouver.org/services/regional-parks/Documents/capilano-river-regional-park-map.pdf" download style="color: #3498db; font-weight: bold;">לחצו כאן להורדה</a></li>
+                </ul>
+            </div>
+
+            <div class="success" style="margin-top: 20px;">
+                <strong>🗺️ איך להשתמש במפה בשטח:</strong><br>
+                1. הורידו את המפה לפני היציאה<br>
+                2. שמרו בגלריה או ב-"קבצים"<br>
+                3. במהלך הטיול - פתחו מהטלפון גם בלי אינטרנט!
             </div>
         </div>
 
@@ -1066,35 +1084,84 @@
 
         // Initialize Map
         function initMap() {
-            const map = L.map('map').setView([49.3598, -123.1074], 13);
+            const map = L.map('map').setView([49.3520, -123.1090], 14);
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
             }).addTo(map);
 
-            // Cleveland Dam
-            L.marker([49.3567, -123.1062]).addTo(map)
-                .bindPopup('<strong>🏔️ Cleveland Dam</strong><br>נקודת התחלה - 09:45<br>סכר מרשים בגובה 97 מטר');
+            // Custom icon colors
+            const greenIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
 
-            // Giant Fir Trail / Grandpa Capilano
-            L.marker([49.3540, -123.1070]).addTo(map)
-                .bindPopup('<strong>🌲 Giant Fir Trail</strong><br>Grandpa Capilano - 10:15<br>עץ בן 800 שנה!');
+            const redIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
 
-            // Second Canyon Viewpoint
-            L.marker([49.3520, -123.1080]).addTo(map)
-                .bindPopup('<strong>👁️ Second Canyon Viewpoint</strong><br>10:45<br>נוף מדהים של הקניון');
+            const orangeIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
 
-            // Capilano Salmon Hatchery
-            L.marker([49.3495, -123.1095]).addTo(map)
-                .bindPopup('<strong>🐟 Capilano Salmon Hatchery</strong><br>11:15-12:00<br>המדגרה - היעד שלנו!');
+            // Cleveland Dam (נקודת התחלה)
+            L.marker([49.3571, -123.1062], {icon: greenIcon}).addTo(map)
+                .bindPopup('<strong>🏔️ Cleveland Dam</strong><br>נקודת התחלה - 09:45<br>סכר מרשים בגובה 97 מטר<br>חנייה כאן!');
 
-            // Edgemont Village
-            L.marker([49.3440, -123.1050]).addTo(map)
-                .bindPopup('<strong>🍽️ Edgemont Village</strong><br>12:00-13:00<br>מסעדות ללא גלוטן');
+            // Giant Fir Trail / Grandpa Capilano (לאורך השביל)
+            L.marker([49.3540, -123.1080]).addTo(map)
+                .bindPopup('<strong>🌲 Giant Fir Trail</strong><br>Grandpa Capilano - 10:15-10:45<br>עץ בן 800 שנה!');
 
-            // The Fish Counter
-            L.marker([49.3442, -123.1048]).addTo(map)
-                .bindPopup('<strong>⭐ The Fish Counter</strong><br>מסעדה מומלצת!<br>100% ללא גלוטן');
+            // Second Canyon Viewpoint (ליד הסכר)
+            L.marker([49.3555, -123.1075]).addTo(map)
+                .bindPopup('<strong>👁️ Second Canyon Viewpoint</strong><br>10:45-11:00<br>נוף מדהים של הקניון והסכר');
+
+            // Cable Pool Bridge (הגשר)
+            L.marker([49.3515, -123.1095]).addTo(map)
+                .bindPopup('<strong>🌉 Cable Pool Bridge</strong><br>11:00-11:15<br>גשר מעל הנהר');
+
+            // Capilano Salmon Hatchery (היעד הראשי!)
+            L.marker([49.3495, -123.1105], {icon: redIcon}).addTo(map)
+                .bindPopup('<strong>🐟 Capilano Salmon Hatchery</strong><br>11:15-12:00<br>המדגרה - היעד שלנו!<br>4500 Capilano Park Road');
+
+            // Edgemont Village (אזור המסעדות)
+            L.marker([49.3446, -123.1053], {icon: orangeIcon}).addTo(map)
+                .bindPopup('<strong>🍽️ Edgemont Village</strong><br>12:00-13:00<br>מסעדות ללא גלוטן<br>3099 Edgemont Blvd');
+
+            // The Fish Counter (המסעדה המומלצת!)
+            L.marker([49.3447, -123.1052], {icon: orangeIcon}).addTo(map)
+                .bindPopup('<strong>⭐ The Fish Counter</strong><br>מסעדה מומלצת ביותר!<br>100% ללא גלוטן<br>fryer ייעודי!');
+
+            // Draw path between main points
+            const pathCoordinates = [
+                [49.3571, -123.1062], // Cleveland Dam
+                [49.3555, -123.1075], // Second Canyon Viewpoint
+                [49.3540, -123.1080], // Giant Fir Trail
+                [49.3515, -123.1095], // Cable Pool Bridge
+                [49.3495, -123.1105]  // Hatchery
+            ];
+            
+            L.polyline(pathCoordinates, {
+                color: '#e74c3c',
+                weight: 4,
+                opacity: 0.7,
+                dashArray: '10, 10'
+            }).addTo(map).bindPopup('המסלול המומלץ שלנו!');
 
             window.mapInitialized = true;
         }
