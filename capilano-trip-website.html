@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>טיול Capilano River Hatchery - 16 באוקטובר 2025</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideDown 0.6s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .nav-tab {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .nav-tab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .content-section {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h2 {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        h3 {
+            color: #34495e;
+            font-size: 1.5em;
+            margin: 25px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h4 {
+            color: #16a085;
+            font-size: 1.2em;
+            margin: 15px 0 10px 0;
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            border-right: 5px solid #3498db;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateX(-5px);
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-right: 5px solid #e17055;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .warning {
+            background: linear-gradient(135deg, #fab1a0, #e17055);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+        
+        .success {
+            background: linear-gradient(135deg, #55efc4, #00b894);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+        
+        #map {
+            height: 500px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .timeline {
+            position: relative;
+            padding-right: 40px;
+        }
+        
+        .timeline-item {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 15px;
+            border-right: 4px solid #3498db;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover {
+            transform: translateX(-10px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px #3498db;
+        }
+        
+        .time {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        tr:hover {
+            background: #e8f4f8;
+        }
+        
+        .restaurant-card {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 15px;
+            border-right: 5px solid #16a085;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .restaurant-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .restaurant-card h4 {
+            color: #16a085;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px 5px 5px 0;
+            font-weight: 600;
+        }
+        
+        .badge.recommended {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+        
+        .badge.price {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+        
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        
+        .checklist {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        
+        .checklist-item:hover {
+            background: #d5dbdb;
+        }
+        
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .pdf-embed {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            margin: 20px 0;
+        }
+        
+        .icon {
+            font-size: 1.5em;
+            margin-left: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .nav-tab {
+                width: 100%;
+            }
+            
+            #map {
+                height: 400px;
+            }
+            
+            .timeline {
+                padding-right: 20px;
+            }
+        }
+        
+        .footer {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .footer p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌲 טיול Capilano River Hatchery 🐟</h1>
+            <div class="subtitle">יום חמישי, 16 באוקטובר 2025 | 4 משתתפים | ללא גלוטן</div>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('overview')">📋 סקירה כללית</button>
+            <button class="nav-tab" onclick="showSection('timeline')">⏰ לוח זמנים</button>
+            <button class="nav-tab" onclick="showSection('map')">🗺️ מפה אינטראקטיבית</button>
+            <button class="nav-tab" onclick="showSection('trail')">🥾 מסלול בפארק</button>
+            <button class="nav-tab" onclick="showSection('food')">🍽️ אוכל ומסעדות</button>
+            <button class="nav-tab" onclick="showSection('costs')">💰 עלויות</button>
+            <button class="nav-tab" onclick="showSection('info')">ℹ️ מידע חשוב</button>
+            <button class="nav-tab" onclick="showSection('checklist')">✅ צ'קליסט</button>
+            <button class="nav-tab" onclick="showSection('parkmap')">🗺️ מפת הפארק</button>
+        </div>
+
+        <!-- Overview Section -->
+        <div id="overview" class="content-section active">
+            <h2><span class="icon">📋</span> סקירה כללית</h2>
+            
+            <div class="highlight">
+                <h3>🎯 יעדי היום</h3>
+                <ul>
+                    <li><strong>יציאה:</strong> 09:00 מ-New Westminster (ליד Moody Park)</li>
+                    <li><strong>חזרה:</strong> 14:00 (כולל מרווח בטחון של 30 דקות)</li>
+                    <li><strong>משך הטיול:</strong> 5 שעות מלאות</li>
+                    <li><strong>תחבורה:</strong> Uber (הלוך וחזור)</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>🏞️ אודות Capilano River Hatchery</h3>
+                <p><strong>Capilano River Hatchery</strong> היא מדגרה פדרלית שנבנתה בשנת 1971 לחיזוק אוכלוסיות הסלמון שהושפעו מבניית סכר קליבלנד. המדגרה מגדלת ומשחררת מעל מיליון דגי סלמון מדי שנה ומקבלת כ-250,000 מבקרים בשנה.</p>
+                
+                <p style="margin-top: 15px;"><strong>📍 כתובת:</strong> 4500 Capilano Park Road, North Vancouver, BC V7R 4L3</p>
+                <p><strong>☎️ טלפון:</strong> 604-666-1790</p>
+                <p><strong>💵 כניסה:</strong> חינם! 🎉</p>
+                <p><strong>🕐 שעות פתיחה באוקטובר:</strong> 08:00-18:00</p>
+            </div>
+
+            <div class="success">
+                <strong>✨ למה אוקטובר זה זמן מצוין?</strong><br>
+                אוקטובר הוא עונת השרצה של הסלמון! יש סיכוי טוב לראות סלמון בוגר מטפס בסולמות הדגים. היער ירוק ומרהיב, והאזור פחות צפוף מאשר בקיץ.
+            </div>
+        </div>
+
+        <!-- Timeline Section -->
+        <div id="timeline" class="content-section">
+            <h2><span class="icon">⏰</span> לוח זמנים מפורט</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="time">09:00</div>
+                    <h4>🚗 יציאה מ-New Westminster</h4>
+                    <p><strong>מיקום:</strong> ליד Moody Park, New Westminster</p>
+                    <p><strong>נסיעה ב-Uber:</strong> 25-30 דקות (26 ק"מ)</p>
+                    <p><strong>עלות:</strong> $40-55 CAD</p>
+                    <p><strong>💡 טיפ:</strong> הזמינו Uber מראש באפליקציה - אפשר עד 90 יום מראש!</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">09:30-09:45</div>
+                    <h4>🏔️ הגעה ל-Cleveland Dam</h4>
+                    <p>הגעה לחניית סכר קליבלנד - נקודת ההתחלה שלנו</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">09:45-10:15</div>
+                    <h4>🌊 Cleveland Dam - סכר קליבלנד</h4>
+                    <p>סכר מרשים בגובה 97 מטר שנבנה ב-1954. נוף מדהים של האגם, ההרים ומפלי מים (אם הסכר פתוח).</p>
+                    <p><strong>משך:</strong> 20-30 דקות | <strong>📸 מקום צילום מצוין!</strong></p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">10:15-10:45</div>
+                    <h4>🌲 Giant Fir Trail + Grandpa Capilano</h4>
+                    <p>הליכה בשביל Giant Fir ופגישה עם "סבא קפילנו" - עץ אשוח דאגלס בן 800 שנה!</p>
+                    <ul>
+                        <li>גובה: 61 מטר</li>
+                        <li>קוטר: 3 מטר</li>
+                        <li>מסלול קל עם מדרגות עץ</li>
+                    </ul>
+                    <p><strong>משך:</strong> 30 דקות</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">10:45-11:00</div>
+                    <h4>👁️ Second Canyon Viewpoint</h4>
+                    <p>נקודת תצפית מרהיבה על הקניון וחלקו התחתון של הסכר. תוכלו לראות את המדגרה מצד שני של הנהר!</p>
+                    <p><strong>משך:</strong> 10-15 דקות | 💦 לפעמים מרגישים ערפל מהמפלים!</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">11:00-11:15</div>
+                    <h4>🌉 Cable Pool Bridge → המדגרה</h4>
+                    <p>הליכה קצרה לאורך הנהר אל המדגרה</p>
+                    <p><strong>משך:</strong> 15 דקות</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">11:15-12:00</div>
+                    <h4>🐟 Capilano Salmon Hatchery - המדגרה!</h4>
+                    <p><strong>מה תראו:</strong></p>
+                    <ul>
+                        <li>מרכז מבקרים עם סיור מודרך עצמי</li>
+                        <li>דגי סלמון צעירים באקווריומים</li>
+                        <li>גלריית התצפית "Fishway" - סלמון מטפס בסולמות!</li>
+                        <li>תצוגות אינפורמטיביות על מחזור החיים של הסלמון</li>
+                    </ul>
+                    <p><strong>משך:</strong> 30-45 דקות</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">12:00-13:00</div>
+                    <h4>🍽️ ארוחת צהריים ב-Edgemont Village</h4>
+                    <p>5-7 דקות נסיעה מהמדגרה למגוון מסעדות מעולות ללא גלוטן</p>
+                    <p><strong>משך:</strong> 60 דקות</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">13:00-13:10</div>
+                    <h4>🚗 הזמנת Uber לחזרה</h4>
+                    <p>הזמנה מ-Edgemont Village</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="time">13:10-13:40</div>
+                    <h4>🏠 נסיעה חזרה</h4>
+                    <p>25-30 דקות חזרה ל-New Westminster</p>
+                </div>
+
+                <div class="timeline-item" style="background: linear-gradient(135deg, #55efc4, #00b894); color: white;">
+                    <div class="time" style="color: white;">13:40-14:00</div>
+                    <h4 style="color: white;">✅ מרווח בטחון + הגעה בזמן!</h4>
+                    <p>20 דקות מרווח בטחון - תגיעו בנוחות ב-14:00!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Section -->
+        <div id="map-section" class="content-section">
+            <h2><span class="icon">🗺️</span> מפה אינטראקטיבית</h2>
+            
+            <div class="info-card">
+                <p><strong>המפה מציגה את כל נקודות העניין בטיול:</strong></p>
+                <ul>
+                    <li>🟢 נקודת התחלה: Cleveland Dam</li>
+                    <li>🔵 נקודות עצירה במסלול</li>
+                    <li>🔴 יעד ראשי: Capilano Salmon Hatchery</li>
+                    <li>🟠 מסעדות ב-Edgemont Village</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong>💡 טיפ:</strong> לחצו על הסמנים למידע נוסף!</p>
+            </div>
+            
+            <div id="map"></div>
+        </div>
+
+        <!-- Trail Section -->
+        <div id="trail" class="content-section">
+            <h2><span class="icon">🥾</span> המסלול בפארק</h2>
+            
+            <div class="highlight">
+                <h3>📏 פרטי המסלול</h3>
+                <ul>
+                    <li><strong>אורך:</strong> ~3.5 ק"מ (לופ)</li>
+                    <li><strong>זמן הליכה:</strong> 2.5-3 שעות (כולל עצירות)</li>
+                    <li><strong>רמת קושי:</strong> קל-בינוני</li>
+                    <li><strong>עליית גובה:</strong> ~0-150 מטר (תלוי במסלול)</li>
+                    <li><strong>סוג שביל:</strong> מדרגות עץ, שבילי עפר, גשרים</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>🗺️ השבילים הראשיים</h3>
+                
+                <h4>1️⃣ Upper Shinglebolt Trail</h4>
+                <p>שביל יער מהסכר כלפי מטה. חווייה שקטה מתחת לעצי Hemlock ו-Fir.</p>
+                
+                <h4>2️⃣ Giant Fir Trail</h4>
+                <p>השביל המפורסם! כולל את "Grandpa Capilano" - עץ בן 800 שנה ועוד מספר עצי ענק מרהיבים. שבילים חלקים עם מדרגות מינימליות.</p>
+                
+                <h4>3️⃣ Second Canyon Viewpoint Trail</h4>
+                <p>מוביל לנקודת התצפית המדהימה על הסכר והקניון. אחד האזורים העמוסים בפארק!</p>
+                
+                <h4>4️⃣ Coho Loop Trail</h4>
+                <p>שביל קצר שמתפתל לאורך הנהר עם הצצות אל הקניון. מוביל ישירות למדגרה.</p>
+                
+                <h4>5️⃣ Pipeline Trail / Pipe Bridge</h4>
+                <p>גשר תלוי מעל הנהר - לא לאלו שפוחדים מגבהים! נוף מדהים של המים המסתחררים למטה.</p>
+                
+                <h4>6️⃣ Palisades Trail</h4>
+                <p>מטפס מהמדגרה חזרה לסכר. מדרגות תלולות עם נוף יפה.</p>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ אזהרות בטיחות חשובות:</strong><br>
+                הקניון יכול להיות מקום מסוכן - גדותיו תלולות וחלקות מאוד. אזורים מסוימים מסומנים עם שלטים וגדרות. היו זהירים במיוחד אחרי גשם! רמת הנהר יכולה לעלות במהירות. אל תתקרבו לקצה הצוק ואל תעזבו חפצים בולטים ברכב.
+            </div>
+
+            <div class="info-card">
+                <h3>🌲 מה תראו בדרך?</h3>
+                <ul>
+                    <li>🌳 <strong>עצי ענק:</strong> Douglas Fir ו-Western Red Cedar בני מאות שנים</li>
+                    <li>🍄 <strong>פטריות וחזזיות:</strong> צמחייה ייחודית של יער גשם</li>
+                    <li>🌊 <strong>Capilano River:</strong> נהר בהיר עם מים טורקיז מדהימים</li>
+                    <li>🦅 <strong>חיות בר:</strong> ציפורים, סנאים, ולפעמים אייל שחור</li>
+                    <li>🐟 <strong>סלמון:</strong> באוקטובר - עונת השרצה! סלמון קופץ במעלה הזרם</li>
+                    <li>🏔️ <strong>נוף הרים:</strong> מבט אל Grouse Mountain והרי החוף</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Food Section -->
+        <div id="food" class="content-section">
+            <h2><span class="icon">🍽️</span> אוכל ומסעדות - ללא גלוטן</h2>
+            
+            <div class="info-card">
+                <h3>📍 Edgemont Village</h3>
+                <p>שכונה מקסימה בסגנון עיירת הרים, 5-7 דקות נסיעה מהמדגרה. מגוון מסעדות וקפה נעימים עם אווירה מקומית אותנטית. כל האפשרויות מציעות אוכל ללא גלוטן!</p>
+            </div>
+
+            <div class="restaurant-card">
+                <h4>⭐ The Fish Counter</h4>
+                <span class="badge recommended">מומלץ ביותר!</span>
+                <span class="badge">100% ללא גלוטן</span>
+                <span class="badge price">$15-20</span>
+                
+                <p><strong>📍 כתובת:</strong> 3099 Edgemont Blvd, Edgemont Village</p>
+                <p><strong>⏰ שעות:</strong> 11:00-20:00</p>
+                <p><strong>☎️ טלפון:</strong> לא צוין (ניתן לחפש)</p>
+                
+                <p style="margin-top: 15px;"><strong>למה כדאי:</strong></p>
+                <ul>
+                    <li>כל פריט בתפריט יכול להיות ללא גלוטן</li>
+                    <li>יש להם fryer ייעודי נפרד - אפס זיהום צולב!</li>
+                    <li>דגים טריים, קיימותיים (Ocean Wise)</li>
+                    <li>מומחים בבטיחות למי שסובלים מצליאק</li>
+                </ul>
+                
+                <p><strong>מומלץ להזמין:</strong> Fish & Chips ללא גלוטן (הכי טעים בעיר!)</p>
+            </div>
+
+            <div class="restaurant-card">
+                <h4>🥐 Two Daughters Bakeshop</h4>
+                <span class="badge">100% ללא גלוטן</span>
+                <span class="badge price">$10-15</span>
+                
+                <p><strong>📍 כתובת:</strong> 121 East 1st Street, North Vancouver</p>
+                
+                <p style="margin-top: 15px;"><strong>למה כדאי:</strong></p>
+                <ul>
+                    <li>מאפייה ייעודית - הכל 100% ללא גלוטן!</li>
+                    <li>בטוח לחלוטין לצליאקים</li>
+                    <li>מגוון מאפים מתוקים ומלוחים</li>
+                    <li>אידיאלי לבראנץ' או ארוחה קלה</li>
+                </ul>
+                
+                <p><strong>מומלץ:</strong> מיני פיצות, פשטידות, עוגיות וסלטים מתוקים</p>
+            </div>
+
+            <div class="restaurant-card">
+                <h4>🌮 Cantina Norte</h4>
+                <span class="badge">אפשרויות GF</span>
+                <span class="badge price">$15-20</span>
+                
+                <p><strong>📍 כתובת:</strong> Edgemont Village</p>
+                <p><strong>⏰ שעות ארוחת צהריים:</strong> 11:30-15:00</p>
+                <p><strong>☎️ טלפון:</strong> (604) 670-8226</p>
+                
+                <p style="margin-top: 15px;"><strong>למה כדאי:</strong></p>
+                <ul>
+                    <li>מסעדה מקסיקנית מקומית עם מוניטין</li>
+                    <li>תפריט עם אפשרויות ללא גלוטן מסומנות</li>
+                    <li>צוות מודע לצליאק</li>
+                    <li>אווירה נעימה ותוססת</li>
+                </ul>
+                
+                <p><strong>💡 טיפ:</strong> ציינו לצוות שאתם צליאקים</p>
+            </div>
+
+            <div class="restaurant-card">
+                <h4>☕ BjornBar Bakery</h4>
+                <span class="badge">אפשרויות GF</span>
+                <span class="badge price">$8-12</span>
+                
+                <p><strong>📍 כתובת:</strong> 102-3053 Edgemont Blvd</p>
+                <p><strong>⏰ שעות:</strong> 07:00-18:00</p>
+                
+                <p style="margin-top: 15px;"><strong>למה כדאי:</strong></p>
+                <ul>
+                    <li>בית קפה נעים עם אווירה חמה</li>
+                    <li>מבחר מאפים ללא גלוטן</li>
+                    <li>מושלם לארוחת בוקר או חטיף</li>
+                    <li>קפה איכותי</li>
+                </ul>
+                
+                <p><strong>מומלץ:</strong> B Bomb (ספירת קרואסון עם שוקולד), קפה ועוגיות GF</p>
+            </div>
+
+            <div class="highlight">
+                <h3>🏆 ההמלצה שלי</h3>
+                <p><strong>The Fish Counter</strong> - יחס איכות-מחיר מצוין, בטיחות מקסימלית לצליאקים, וחוויה קולינרית מקומית אותנטית. זו הבחירה המושלמת!</p>
+            </div>
+        </div>
+
+        <!-- Costs Section -->
+        <div id="costs" class="content-section">
+            <h2><span class="icon">💰</span> עלויות משוערות</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>פריט</th>
+                        <th>עלות (CAD)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🚗 Uber הלוך (New Westminster → Capilano)</td>
+                        <td>$40-55</td>
+                    </tr>
+                    <tr>
+                        <td>🚗 Uber חזור (Edgemont → New Westminster)</td>
+                        <td>$40-55</td>
+                    </tr>
+                    <tr>
+                        <td>🎫 כניסה ל-Capilano River Hatchery</td>
+                        <td><strong>חינם! 🎉</strong></td>
+                    </tr>
+                    <tr>
+                        <td>🅿️ חנייה</td>
+                        <td>לא רלוונטי (Uber)</td>
+                    </tr>
+                    <tr>
+                        <td>🍽️ ארוחת צהריים (4 אנשים @ $15-20 לאדם)</td>
+                        <td>$60-80</td>
+                    </tr>
+                    <tr style="background: #ffeaa7; font-weight: bold;">
+                        <td><strong>💵 סה"כ משוער</strong></td>
+                        <td><strong>$140-190</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-card">
+                <h3>💡 טיפים לחיסכון</h3>
+                <ul>
+                    <li><strong>Uber Pool/Shared:</strong> אם זמין, יכול להוזיל עלויות נסיעה</li>
+                    <li><strong>The Fish Counter:</strong> המסעדה המומלצת נמצאת בטווח המחירים שלכם בדיוק</li>
+                    <li><strong>הביאו חטיפים:</strong> אגוזים, פירות יבשים ללא גלוטן - יחסוך $10-15</li>
+                    <li><strong>בקבוקי מים לשימוש חוזר:</strong> חוסך כסף ושומר על הסביבה</li>
+                </ul>
+            </div>
+
+            <div class="highlight">
+                <h3>💳 חלוקת תקציב מומלצת</h3>
+                <table>
+                    <tr>
+                        <td><strong>תחבורה (Uber)</strong></td>
+                        <td>$80-110 (כ-57% מהתקציב)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>אוכל</strong></td>
+                        <td>$60-80 (כ-43% מהתקציב)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>אטרקציות</strong></td>
+                        <td>$0 (הכל חינם!)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div id="info" class="content-section">
+            <h2><span class="icon">ℹ️</span> מידע חשוב ליום הטיול</h2>
+            
+            <div class="info-card">
+                <h3>🕐 שעות פעילות</h3>
+                <ul>
+                    <li><strong>Capilano River Hatchery:</strong> 08:00-18:00 (אוקטובר)</li>
+                    <li><strong>Cleveland Dam:</strong> פתוח 24/7 (אזור חיצוני)</li>
+                    <li><strong>שבילי הפארק:</strong> פתוח בשעות האור</li>
+                    <li><strong>מסעדות Edgemont Village:</strong> רובן פתוחות 11:00-20:00</li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                <h3>🌧️ מזג אוויר באוקטובר</h3>
+                <p><strong>וונקובר באוקטובר = גשם תכוף!</strong></p>
+                <ul>
+                    <li>🌡️ טמפרטורה: 8-14°C</li>
+                    <li>☔ גשם: סביר מאוד (עיר עם כ-160 ימי גשם בשנה)</li>
+                    <li>🧥 מה להביא: מעילי גשם קלים, שכבות ביגוד</li>
+                    <li>👟 נעליים: נעלי הליכה עמידות למים עם אחיזה טובה (שבילים רטובים!)</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>🎒 מה להביא?</h3>
+                <ul>
+                    <li>💧 <strong>בקבוקי מים:</strong> חשוב להישאר מהודרטים</li>
+                    <li>📸 <strong>מצלמה/טלפון:</strong> המקום מדהים לצילום!</li>
+                    <li>🔋 <strong>מטען נייד:</strong> להבטיח שהטלפון יחזיק</li>
+                    <li>🧻 <strong>מגבות רטובות/ג'ל:</strong> לא תמיד יש מתקנים</li>
+                    <li>🍫 <strong>חטיפים:</strong> אגוזים, פירות יבשים (ללא גלוטן!)</li>
+                    <li>🧥 <strong>מעיל גשם קל:</strong> הכרחי!</li>
+                    <li>🧤 <strong>כפפות/כובע:</strong> יכול להיות קריר</li>
+                    <li>🩹 <strong>ערכת עזרה ראשונה קטנה:</strong> פלסטרים, משכך כאבים</li>
+                    <li>🗺️ <strong>המפה הזו:</strong> שמרו בטלפון או הדפיסו</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>🚻 שירותים</h3>
+                <ul>
+                    <li>✅ Cleveland Dam - יש שירותים ציבוריים</li>
+                    <li>✅ Capilano Salmon Hatchery - יש שירותים נקיים</li>
+                    <li>✅ Edgemont Village - מסעדות וקפה</li>
+                    <li>⚠️ לאורך השבילים - אין! תכננו בהתאם</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>🅿️ חנייה ונקודות איסוף Uber</h3>
+                <ul>
+                    <li><strong>חניית Cleveland Dam:</strong> יכולה להתמלא בסופי שבוע שטופי שמש</li>
+                    <li><strong>נקודת איסוף Uber בבוקר:</strong> בקשו נהג להיכנס לחניית Cleveland Dam (Capilano Park Road)</li>
+                    <li><strong>נקודת איסוף Uber בצהריים:</strong> מול המסעדה ב-Edgemont Village</li>
+                    <li><strong>💡 טיפ:</strong> שמרו את הכתובות בטלפון מראש!</li>
+                </ul>
+            </div>
+
+            <div class="success">
+                <h3>📱 מספרי חירום וטלפונים חשובים</h3>
+                <ul>
+                    <li><strong>חירום (משטרה/כבאות/אמבולנס):</strong> 911</li>
+                    <li><strong>Capilano River Hatchery:</strong> 604-666-1790</li>
+                    <li><strong>Metro Vancouver Parks:</strong> 604-432-6200</li>
+                    <li><strong>Uber Support:</strong> דרך האפליקציה</li>
+                </ul>
+            </div>
+
+            <div class="warning">
+                <h3>⚠️ אזהרות בטיחות</h3>
+                <ul>
+                    <li><strong>הקניון מסוכן:</strong> גדות תלולות וחלקות - אל תתקרבו לקצה!</li>
+                    <li><strong>רמת המים:</strong> יכולה לעלות במהירות - היו ערניים</li>
+                    <li><strong>שבילים רטובים:</strong> הליכה זהירה במיוחד אחרי גשם</li>
+                    <li><strong>חיות בר:</strong> אל תאכילו או תתקרבו לחיות</li>
+                    <li><strong>השאירו רכוש מאובטח:</strong> גניבות נדירות אבל קורות</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>🐕 כלבים</h3>
+                <p>כלבים מותרים ברוב הפארק <strong>בלבד עם רצועה</strong>. אסור להכניס כלבים לתוך מבנה המדגרה עצמו.</p>
+            </div>
+        </div>
+
+        <!-- Checklist Section -->
+        <div id="checklist" class="content-section">
+            <h2><span class="icon">✅</span> צ'קליסט לפני היציאה</h2>
+            
+            <div class="checklist">
+                <h3>📅 לפני היום (עד שבוע לפני)</h3>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>הזמנת Uber מראש (באפליקציה - עד 90 יום מראש)</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>שמירת כתובות במפות הטלפון (Cleveland Dam, Hatchery, Edgemont Village)</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>הורדת מפת הפארק (PDF) לטלפון</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>שמירת דף זה (הדפסה או שמירה בטלפון)</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>בדיקת תחזית מזג אוויר</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>אישור הזמנה במסעדה (אם תבחרו Cantina Norte)</span>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h3>🌅 ביום הטיול - בבוקר</h3>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>טעינת טלפונים ל-100%</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>הכנת מעילי גשם קלים</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>לבישת נעלי הליכה נוחות (עמידות למים!)</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>מילוי בקבוקי מים</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>אריזת חטיפים ללא גלוטן</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>הכנת שכבות ביגוד (יכול להיות קר)</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>לקיחת מטען נייד</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>לקיחת מצלמה/וידוא שיש מקום בטלפון</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>לקיחת מגבות רטובות/ג'ל לידיים</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>ערכת עזרה ראשונה קטנה</span>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h3>🚗 לפני היציאה (08:45)</h3>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>אישור הזמנת Uber בשעה 09:00</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>בדיקת תנאי תנועה (Google Maps)</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>ודוא שכולם מוכנים לצאת בזמן</span>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h3>📸 במהלך הטיול</h3>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>צילום ב-Cleveland Dam</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>צילום עם Grandpa Capilano (העץ בן 800)</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>צילום ב-Second Canyon Viewpoint</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>צילום הסלמון במדגרה</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>תיעוד החוויה (וידאו קצר?)</span>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h3>🏠 לפני החזרה (12:50)</h3>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>הזמנת Uber לחזרה (13:00-13:10)</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>וידוא שכולם בכוננות לנסיעה</span>
+                </div>
+                <div class="checklist-item">
+                    <span class="checkbox">☐</span>
+                    <span>בדיקה שלא שכחתם כלום</span>
+                </div>
+            </div>
+
+            <div class="success" style="margin-top: 30px;">
+                <h3>🎯 מטרה: להגיע בחזרה ב-14:00 בנוחות!</h3>
+                <p>עם מרווח בטחון של 30 דקות, אתם בידיים טובות! 🚀</p>
+            </div>
+        </div>
+
+        <!-- Park Map Section -->
+        <div id="parkmap" class="content-section">
+            <h2><span class="icon">🗺️</span> מפת הפארק הרשמית</h2>
+            
+            <div class="info-card">
+                <h3>📄 מפת Capilano River Regional Park</h3>
+                <p>זוהי המפה הרשמית של Metro Vancouver. היא מציגה את כל השבילים, נקודות העניין והמתקנים בפארק.</p>
+                <p><strong>💡 טיפ:</strong> הורידו את המפה לטלפון לשימוש בשטח!</p>
+                <p><a href="https://metrovancouver.org/services/regional-parks/Documents/capilano-river-regional-park-map.pdf" target="_blank" style="color: #3498db; font-weight: bold;">📥 הורידו את המפה המקורית כאן</a></p>
+            </div>
+
+            <div class="highlight">
+                <h3>🗺️ נקודות מפתח במפה</h3>
+                <ul>
+                    <li><strong>Cleveland Dam:</strong> בצד הצפוני של המפה - נקודת ההתחלה שלנו</li>
+                    <li><strong>Giant Fir Trail:</strong> מסומן בירוק - השביל לעץ הענק</li>
+                    <li><strong>Second Canyon Viewpoint:</strong> נקודת תצפית מסומנת</li>
+                    <li><strong>Capilano Salmon Hatchery:</strong> מסומן בבירור בדרום המפה</li>
+                    <li><strong>Pipeline Bridge / Cable Pool Bridge:</strong> גשרים מעל הנהר</li>
+                    <li><strong>Coho Loop Trail:</strong> הלופ לאורך הנהר</li>
+                </ul>
+            </div>
+
+            <iframe class="pdf-embed" 
+                    src="https://metrovancouver.org/services/regional-parks/Documents/capilano-river-regional-park-map.pdf">
+            </iframe>
+
+            <div class="info-card">
+                <p><strong>אם ה-PDF לא נטען:</strong></p>
+                <ol>
+                    <li>לחצו על הקישור למעלה להורדת המפה</li>
+                    <li>שמרו אותה בטלפון או הדפיסו</li>
+                    <li>קחו אותה איתכם ליום הטיול!</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>🌲 תהנו מהטיול המדהים שלכם ב-Capilano! 🐟</strong></p>
+            <p style="margin-top: 10px;">נוצר במיוחד עבור הטיול שלכם ביום חמישי, 16 באוקטובר 2025</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">💚 הכל ארוז כאן - פשוט תעקבו אחרי התוכנית ותהנו!</p>
+        </div>
+    </div>
+
+    <script>
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            const section = sectionId === 'map' ? document.getElementById('map-section') : document.getElementById(sectionId);
+            section.classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Initialize map if map section is shown
+            if (sectionId === 'map' && !window.mapInitialized) {
+                initMap();
+            }
+        }
+
+        // Initialize Map
+        function initMap() {
+            const map = L.map('map').setView([49.3598, -123.1074], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Cleveland Dam
+            L.marker([49.3567, -123.1062]).addTo(map)
+                .bindPopup('<strong>🏔️ Cleveland Dam</strong><br>נקודת התחלה - 09:45<br>סכר מרשים בגובה 97 מטר');
+
+            // Giant Fir Trail / Grandpa Capilano
+            L.marker([49.3540, -123.1070]).addTo(map)
+                .bindPopup('<strong>🌲 Giant Fir Trail</strong><br>Grandpa Capilano - 10:15<br>עץ בן 800 שנה!');
+
+            // Second Canyon Viewpoint
+            L.marker([49.3520, -123.1080]).addTo(map)
+                .bindPopup('<strong>👁️ Second Canyon Viewpoint</strong><br>10:45<br>נוף מדהים של הקניון');
+
+            // Capilano Salmon Hatchery
+            L.marker([49.3495, -123.1095]).addTo(map)
+                .bindPopup('<strong>🐟 Capilano Salmon Hatchery</strong><br>11:15-12:00<br>המדגרה - היעד שלנו!');
+
+            // Edgemont Village
+            L.marker([49.3440, -123.1050]).addTo(map)
+                .bindPopup('<strong>🍽️ Edgemont Village</strong><br>12:00-13:00<br>מסעדות ללא גלוטן');
+
+            // The Fish Counter
+            L.marker([49.3442, -123.1048]).addTo(map)
+                .bindPopup('<strong>⭐ The Fish Counter</strong><br>מסעדה מומלצת!<br>100% ללא גלוטן');
+
+            window.mapInitialized = true;
+        }
+
+        // Initialize map if on map section on load
+        if (document.getElementById('map-section').classList.contains('active')) {
+            initMap();
+        }
+    </script>
+</body>
+</html>
