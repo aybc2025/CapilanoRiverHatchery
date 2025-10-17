@@ -1084,7 +1084,7 @@
 
         // Initialize Map
         function initMap() {
-            const map = L.map('map').setView([49.3520, -123.1090], 14);
+            const map = L.map('map').setView([49.3575, -123.1115], 14.5);
             
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors',
@@ -1119,49 +1119,49 @@
                 shadowSize: [41, 41]
             });
 
-            // Cleveland Dam (נקודת התחלה)
-            L.marker([49.3571, -123.1062], {icon: greenIcon}).addTo(map)
-                .bindPopup('<strong>🏔️ Cleveland Dam</strong><br>נקודת התחלה - 09:45<br>סכר מרשים בגובה 97 מטר<br>חנייה כאן!');
+            // Cleveland Dam (נקודת התחלה - קואורדינטות מדויקות!)
+            L.marker([49.3603, -123.1110], {icon: greenIcon}).addTo(map)
+                .bindPopup('<strong>🏔️ Cleveland Dam</strong><br>נקודת התחלה - 09:45<br>סכר בגובה 97 מטר<br>חנייה כאן!');
 
-            // Giant Fir Trail / Grandpa Capilano (לאורך השביל)
-            L.marker([49.3540, -123.1080]).addTo(map)
-                .bindPopup('<strong>🌲 Giant Fir Trail</strong><br>Grandpa Capilano - 10:15-10:45<br>עץ בן 800 שנה!');
-
-            // Second Canyon Viewpoint (ליד הסכר)
-            L.marker([49.3555, -123.1075]).addTo(map)
+            // Second Canyon Viewpoint (קרוב לסכר מדרום)
+            L.marker([49.3585, -123.1120]).addTo(map)
                 .bindPopup('<strong>👁️ Second Canyon Viewpoint</strong><br>10:45-11:00<br>נוף מדהים של הקניון והסכר');
 
-            // Cable Pool Bridge (הגשר)
-            L.marker([49.3515, -123.1095]).addTo(map)
+            // Giant Fir Trail / Grandpa Capilano (באמצע הפארק)
+            L.marker([49.3555, -123.1130]).addTo(map)
+                .bindPopup('<strong>🌲 Giant Fir Trail</strong><br>Grandpa Capilano - 10:15-10:45<br>עץ בן 800 שנה בתוך היער!');
+
+            // Cable Pool Bridge (הגשר בדרום הפארק)
+            L.marker([49.3530, -123.1125]).addTo(map)
                 .bindPopup('<strong>🌉 Cable Pool Bridge</strong><br>11:00-11:15<br>גשר מעל הנהר');
 
-            // Capilano Salmon Hatchery (היעד הראשי!)
-            L.marker([49.3495, -123.1105], {icon: redIcon}).addTo(map)
-                .bindPopup('<strong>🐟 Capilano Salmon Hatchery</strong><br>11:15-12:00<br>המדגרה - היעד שלנו!<br>4500 Capilano Park Road');
+            // Capilano Salmon Hatchery (קואורדינטות מדויקות!)
+            L.marker([49.3572, -123.1103], {icon: redIcon}).addTo(map)
+                .bindPopup('<strong>🐟 Capilano Salmon Hatchery</strong><br>11:15-12:00<br>המדגרה - היעד שלנו!<br>4500 Capilano Park Road<br>כניסה חינם!');
 
-            // Edgemont Village (אזור המסעדות)
-            L.marker([49.3446, -123.1053], {icon: orangeIcon}).addTo(map)
-                .bindPopup('<strong>🍽️ Edgemont Village</strong><br>12:00-13:00<br>מסעדות ללא גלוטן<br>3099 Edgemont Blvd');
+            // Edgemont Village (ממזרח לפארק)
+            L.marker([49.3442, -123.1048], {icon: orangeIcon}).addTo(map)
+                .bindPopup('<strong>🍽️ Edgemont Village</strong><br>12:00-13:00<br>מסעדות ללא גלוטן<br>שכונה מקסימה!');
 
             // The Fish Counter (המסעדה המומלצת!)
-            L.marker([49.3447, -123.1052], {icon: orangeIcon}).addTo(map)
-                .bindPopup('<strong>⭐ The Fish Counter</strong><br>מסעדה מומלצת ביותר!<br>100% ללא גלוטן<br>fryer ייעודי!');
+            L.marker([49.3444, -123.1050], {icon: orangeIcon}).addTo(map)
+                .bindPopup('<strong>⭐ The Fish Counter</strong><br>3099 Edgemont Blvd<br>מומלץ ביותר!<br>100% ללא גלוטן<br>fryer ייעודי!');
 
-            // Draw path between main points
+            // Draw path through the park
             const pathCoordinates = [
-                [49.3571, -123.1062], // Cleveland Dam
-                [49.3555, -123.1075], // Second Canyon Viewpoint
-                [49.3540, -123.1080], // Giant Fir Trail
-                [49.3515, -123.1095], // Cable Pool Bridge
-                [49.3495, -123.1105]  // Hatchery
+                [49.3603, -123.1110], // Cleveland Dam
+                [49.3585, -123.1120], // Second Canyon Viewpoint
+                [49.3555, -123.1130], // Giant Fir Trail
+                [49.3530, -123.1125], // Cable Pool Bridge
+                [49.3572, -123.1103]  // Hatchery
             ];
             
             L.polyline(pathCoordinates, {
                 color: '#e74c3c',
-                weight: 4,
-                opacity: 0.7,
-                dashArray: '10, 10'
-            }).addTo(map).bindPopup('המסלול המומלץ שלנו!');
+                weight: 5,
+                opacity: 0.8,
+                dashArray: '15, 10'
+            }).addTo(map).bindPopup('🥾 המסלול שלנו בפארק!');
 
             window.mapInitialized = true;
         }
